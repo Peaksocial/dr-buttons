@@ -1,0 +1,61 @@
+User-Agent: *
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+User-Agent: GPTBot
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+User-Agent: ChatGPT-User
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+User-Agent: OAI-SearchBot
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+User-Agent: ClaudeBot
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+User-Agent: Claude-Web
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+User-Agent: PerplexityBot
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+User-Agent: Perplexity-User
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+User-Agent: Google-Extended
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+User-Agent: Applebot-Extended
+Allow: /
+Disallow: /assessment/
+Disallow: /book/
+Disallow: /confirmation/
+
+Sitemap: https://drbuttons.com.au/sitemap.xml

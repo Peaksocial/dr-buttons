@@ -1,0 +1,20 @@
+# Dr Buttons Integrative Health
+
+> Dr Buttons Integrative Health is an Australian telehealth clinic. It connects people with an AHPRA-registered doctor for an online consultation about ongoing pain, sleep and stress, or about quitting smoking or vaping. Tagline: Where Science Meets Wellness.
+
+## What we treat
+- [Pain, sleep and stress](https://drbuttons.com.au/treatments/natural-alternative-medicine/): An online consultation with a registered Australian doctor.
+- [Quit smoking and vaping](https://drbuttons.com.au/treatments/quit-smoking-vaping/): Talk to a doctor about a plan to stop.
+
+## Key facts
+- Phone consultations available Australia-wide.
+- Every consultation is with an AHPRA-registered doctor.
+- A few short questions help book the right appointment and brief the doctor. They are not a diagnosis and do not decide treatment. A registered doctor decides everything in a real-time consultation.
+- The consultation fee is $0. Any treatment, if clinically appropriate, is discussed with the patient and charged separately.
+- Health information is stored securely, hosted in Australia, and handled under the Australian Privacy Principles.
+
+## Pages
+- [How it works](https://drbuttons.com.au/how-it-works/)
+- [About](https://drbuttons.com.au/about/)
+- [FAQs](https://drbuttons.com.au/faqs/)
+- [Contact](https://drbuttons.com.au/contact/)
