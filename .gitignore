@@ -1,2 +1,7 @@
-*.zip
 .DS_Store
+node_modules/
+.wrangler/
+.dev.vars
+*.log
+# Original Netlify export archive (kept locally, not deployed)
+*.zip
