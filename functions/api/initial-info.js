@@ -3,7 +3,11 @@
 
 const WEBHOOK_URL = "https://n8n.creativepeaksocial.com/webhook/initial-info-form-dr-buttons";
 const TIMEOUT_MS = 10000;
-const FIELDS = ["firstName", "lastName", "email", "mobile", "state", "treatment"];
+const FIELDS = [
+  "firstName", "lastName", "dob", "email", "mobile",
+  "street", "suburb", "city", "state", "postcode",
+  "medicare", "medicareIrn", "treatment",
+];
 
 export async function onRequestPost({ request }) {
   let body;
@@ -24,6 +28,10 @@ export async function onRequestPost({ request }) {
   const payload = {
     ...fields,
     name: [fields.firstName, fields.lastName].filter(Boolean).join(" "),
+    // dob arrives as YYYY-MM-DD; also send it Australian-style for humans.
+    dobFormatted: /^\d{4}-\d{2}-\d{2}$/.test(fields.dob) ? fields.dob.split("-").reverse().join("/") : fields.dob,
+    address: [fields.street, fields.suburb, fields.city, [fields.state, fields.postcode].filter(Boolean).join(" ")]
+      .filter(Boolean).join(", "),
     criteria: Array.isArray(body.criteria) ? body.criteria.map(String) : [],
     criteriaConfirmed: body.criteriaConfirmed === true,
     site: "drbuttons.com.au",
