@@ -1,0 +1,7 @@
+# Old /treatments/ URLs moved to /services/ (TGA compliance). Specific rules first.
+/treatments/natural-alternative-medicine/  /services/doctor-consultation/  301
+/treatments/natural-alternative-medicine   /services/doctor-consultation/  301
+/treatments/quit-smoking-vaping/  /services/quit-smoking-support/  301
+/treatments/quit-smoking-vaping   /services/quit-smoking-support/  301
+/treatments/  /services/  301
+/treatments   /services/  301
