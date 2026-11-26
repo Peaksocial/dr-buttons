@@ -23,18 +23,38 @@ let inputStyle=e=>({border:`1px solid ${e?"#b4553f":"var(--color-border-hair)"}`
 labelText=e=>(0,n.jsx)("span",{className:"text-[0.85rem] font-medium",style:{color:"var(--ink-soft)"},children:e}),
 errText=e=>e&&(0,n.jsx)("span",{className:"text-[0.8rem]",style:{color:"#b4553f"},children:e});
 function Box({checked:e}){return(0,n.jsx)("span",{className:"flex-none mt-0.5 flex items-center justify-center rounded-md",style:{width:"1.4rem",height:"1.4rem",border:`1px solid ${e?"var(--gold)":"var(--color-border-hair)"}`,background:e?"var(--gold)":"var(--paper)"},children:e&&(0,n.jsx)("svg",{width:"12",height:"12",viewBox:"0 0 12 12",fill:"none",children:(0,n.jsx)("path",{d:"M2 6l3 3 5-6",stroke:"var(--ink)",strokeWidth:"1.6",strokeLinecap:"round",strokeLinejoin:"round"})})})}
-function w(){let e=(0,s.useRouter)(),t=(0,s.useSearchParams)(),o="nicotine"===t.get("concern")?"nicotine":"alternative",i=TREATMENTS[o],
+let LABELS={alternative:"General consultation",nicotine:"Quit smoking support"},
+FEE_TERMS="The $0 fee covers your initial telehealth consultation. If your doctor recommends treatment, any costs are explained to you before you agree to anything.",
+DURATIONS=["Less than 1 month","1–3 months","3–12 months","More than 12 months"],
+YN=["Yes","No"],YNU=["Yes","No","Not sure"],
+HISTORY0={concern:"",duration:"",seenBefore:"",seenBeforeDetails:"",pregnancy:"",psychosisHistory:"",allergies:"",medicines:"",conditions:"",smokeOrVape:""};
+function confirmedFrom(b,hx){return"nicotine"===b?"Yes"!==hx.pregnancy:("3–12 months"===hx.duration||"More than 12 months"===hx.duration)&&"Yes"===hx.seenBefore&&"No"===hx.pregnancy&&"No"===hx.psychosisHistory}
+function w(){let e=(0,s.useRouter)(),t=(0,s.useSearchParams)(),o="nicotine"===t.get("concern")?"nicotine":"alternative",i=TREATMENTS[o],label=LABELS[o],
+step1=i.criteria.slice(0,2),
 [c,d]=(0,a.useState)({firstName:"",lastName:"",dob:"",email:"",mobile:"",street:"",suburb:"",city:"",state:"",postcode:"",medicare:"",medicareIrn:""}),
-[l,u]=(0,a.useState)([]),[h,m]=(0,a.useState)(!1),[p,y]=(0,a.useState)(!1),[g,x]=(0,a.useState)(!1);
-let set=(e,t)=>d(o=>({...o,[e]:t})),
+[l,u]=(0,a.useState)([]),[h,m]=(0,a.useState)(!1),[p,y]=(0,a.useState)(!1),[g,x]=(0,a.useState)(!1),
+[st,setSt]=(0,a.useState)(1),[hx,setHx]=(0,a.useState)(HISTORY0),[h2,m2]=(0,a.useState)(!1),[rv,setRv]=(0,a.useState)(!1);
+let set=(e,t)=>d(o=>({...o,[e]:t})),setH=(e,t)=>setHx(o=>({...o,[e]:t})),
+toTop=()=>{try{window.scrollTo({top:0})}catch{}},
 errs={firstName:c.firstName.trim()?"":"Please enter your first name.",lastName:c.lastName.trim()?"":"Please enter your last name.",dob:dobErr(c.dob),email:EMAIL.test(c.email.trim())?"":"That doesn't look like a complete email address.",mobile:isMobile(c.mobile)?"":"We need an Australian mobile, starting 04.",street:c.street.trim()?"":"Please enter your street address.",suburb:c.suburb.trim()?"":"Please enter your suburb.",city:c.city.trim()?"":"Please enter your city or town.",state:c.state?"":"Please select your state or territory.",postcode:/^\d{4}$/.test(c.postcode.trim())?"":"Please enter a 4-digit postcode.",medicare:medicareErr(c.medicare),medicareIrn:c.medicareIrn?"":"Please select your number on the card."},
-allTicked=i.criteria.every((e,t)=>l[t]),valid=allTicked&&Object.values(errs).every(e=>!e);
-async function submit(t){if(t.preventDefault(),m(!0),!valid||p)return;y(!0);
-let a={firstName:c.firstName.trim(),lastName:c.lastName.trim(),email:c.email.trim(),mobile:c.mobile.trim(),state:c.state},full={...a,dob:c.dob,street:c.street.trim(),suburb:c.suburb.trim(),city:c.city.trim(),postcode:c.postcode.trim(),medicare:c.medicare.replace(/\D/g,""),medicareIrn:c.medicareIrn};
-try{sessionStorage.setItem("db_assessment",JSON.stringify({branch:o,answers:{contact:a},labels:{}}))}catch{}
-x(!0);let send=fetch("/api/initial-info",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...full,treatment:i.name,criteria:i.criteria,criteriaConfirmed:!0}),signal:AbortSignal.timeout?AbortSignal.timeout(8e3):void 0}).catch(()=>{});
+herrs={concern:hx.concern.trim()?"":"Please tell us briefly what you'd like to talk about.",duration:hx.duration?"":"Please choose an answer.",seenBefore:hx.seenBefore?"":"Please choose an answer.",pregnancy:hx.pregnancy?"":"Please choose an answer.",psychosisHistory:hx.psychosisHistory?"":"Please choose an answer.",smokeOrVape:hx.smokeOrVape?"":"Please choose an answer."},
+allTicked=step1.every((e,t)=>l[t]),valid=allTicked&&Object.values(errs).every(e=>!e),valid2=Object.values(herrs).every(e=>!e);
+function next(t){t.preventDefault(),m(!0),valid&&(setSt(2),toTop())}
+async function submit(t){if(t.preventDefault(),m2(!0),!valid||!valid2||p)return;y(!0);
+let a={firstName:c.firstName.trim(),lastName:c.lastName.trim(),email:c.email.trim(),mobile:c.mobile.trim(),state:c.state},full={...a,dob:c.dob,street:c.street.trim(),suburb:c.suburb.trim(),city:c.city.trim(),postcode:c.postcode.trim(),medicare:c.medicare.replace(/\D/g,""),medicareIrn:c.medicareIrn},
+history=Object.fromEntries(Object.entries(hx).map(([k,v])=>[k,String(v).trim()])),ok=confirmedFrom(o,hx),
+body=JSON.stringify({...full,treatment:i.name,criteria:i.criteria,criteriaConfirmed:ok,history});
+if(ok){try{sessionStorage.setItem("db_assessment",JSON.stringify({branch:o,answers:{contact:a},labels:{}}))}catch{}
+x(!0);let send=fetch("/api/initial-info",{method:"POST",headers:{"Content-Type":"application/json"},body,signal:AbortSignal.timeout?AbortSignal.timeout(8e3):void 0}).catch(()=>{});
 await Promise.all([send,new Promise(e=>setTimeout(e,matchMedia("(prefers-reduced-motion: reduce)").matches?600:1900))]);
 e.push("/book/")}
+else{try{sessionStorage.removeItem("db_assessment")}catch{}
+await fetch("/api/initial-info",{method:"POST",headers:{"Content-Type":"application/json"},body,signal:AbortSignal.timeout?AbortSignal.timeout(8e3):void 0}).catch(()=>{});
+y(!1),setRv(!0),toTop()}}
+if(rv)return(0,n.jsx)("div",{className:"flex items-center justify-center",style:{paddingTop:"7rem",paddingBottom:"4rem",minHeight:"70vh"},children:(0,n.jsxs)("div",{className:"text-center flex flex-col items-center","aria-live":"polite",style:{maxWidth:"34rem"},children:[
+(0,n.jsx)("h1",{className:"display-md text-ink",children:"Thanks."}),
+(0,n.jsx)("p",{className:"mt-3 text-[1.1rem] leading-relaxed",style:{color:"var(--color-ink-muted)"},children:"One of our doctors will review your answers and contact you about next steps."}),
+(0,n.jsx)(r(),{href:"/",className:"btn btn-ghost mt-8",children:"Back to home"})]})});
 if(g)return(0,n.jsx)("div",{className:"flex items-center justify-center",style:{paddingTop:"7rem",paddingBottom:"4rem",minHeight:"80vh"},children:(0,n.jsxs)("div",{className:"db-done text-center flex flex-col items-center","aria-live":"polite",children:[(0,n.jsx)("style",{children:DONE_CSS}),
 (0,n.jsxs)("svg",{className:"db-done-mark",viewBox:"0 0 80 80",width:"88",height:"88","aria-hidden":"true",children:[(0,n.jsx)("circle",{className:"db-done-ring",cx:"40",cy:"40",r:"36",fill:"none",strokeWidth:"2"}),(0,n.jsx)("path",{className:"db-done-tick",d:"M26 41l9 9 19-20",fill:"none",strokeWidth:"3",strokeLinecap:"round",strokeLinejoin:"round"})]}),
 (0,n.jsxs)("h1",{className:"db-done-text display-md mt-6 text-ink",children:["Thanks",c.firstName.trim()?`, ${c.firstName.trim()}`:"","."]}),
@@ -42,12 +62,36 @@ if(g)return(0,n.jsx)("div",{className:"flex items-center justify-center",style:{
 (0,n.jsx)("div",{className:"db-done-bar mt-6",children:(0,n.jsx)("span",{})})]})});
 let field=(e,t,o="text",a="",i,x={})=>{let s=h&&!!errs[e];return(0,n.jsxs)("label",{className:"flex flex-col gap-1.5",children:[labelText(t),(0,n.jsx)("input",{type:o,name:e,value:c[e],placeholder:a,autoComplete:i,"aria-invalid":s,inputMode:x.inputMode,maxLength:x.maxLength,max:x.max,onChange:t=>set(e,t.target.value),className:"rounded-xl px-4 py-3 text-[1.02rem]",style:inputStyle(s)}),(x.hint||"mobile"===e)&&!s&&(0,n.jsx)("span",{className:"text-[0.8rem]",style:{color:"var(--color-ink-subtle)"},children:x.hint||"Australian mobile numbers only"}),s&&errText(errs[e])]})};
 let sel=(e,t,o,a="Please select")=>{let s=h&&!!errs[e];return(0,n.jsxs)("label",{className:"flex flex-col gap-1.5",children:[labelText(t),(0,n.jsxs)("select",{name:e,value:c[e],onChange:t=>set(e,t.target.value),"aria-invalid":s,className:"rounded-xl px-4 py-3 text-[1.02rem]",style:inputStyle(s),children:[(0,n.jsx)("option",{value:"",children:a}),o.map(e=>(0,n.jsx)("option",{value:e,children:e},e))]}),s&&errText(errs[e])]})};
-let today=new Date().toISOString().slice(0,10),sub=e=>(0,n.jsx)("h3",{className:"font-display mt-10 text-ink",style:{fontSize:"1.2rem"},children:e});
-return(0,n.jsx)("div",{style:{paddingTop:"7rem",paddingBottom:"4rem"},children:(0,n.jsx)("div",{className:"container-narrow w-full",children:(0,n.jsxs)("form",{onSubmit:submit,noValidate:!0,className:"mx-auto",style:{maxWidth:"40rem"},children:[
-(0,n.jsx)("div",{className:"text-center",children:(0,n.jsx)("span",{className:"eyebrow",children:"Book your $0 consultation"})}),
-(0,n.jsxs)("h1",{className:"display-md mt-3 text-ink text-center mx-auto",style:{maxWidth:"26ch"},children:["Before proceeding with ",i.name,", confirm you meet all the following criteria:"]}),
-(0,n.jsx)("div",{className:"grid gap-3 mt-8",children:i.criteria.map((e,t)=>(0,n.jsxs)("button",{type:"button",className:"w-full text-left rounded-2xl px-5 py-4 text-[1rem] transition-all duration-300 border flex items-start gap-3",style:l[t]?{borderColor:"var(--gold)",background:"color-mix(in oklab, var(--gold) 12%, var(--paper))",color:"var(--ink)"}:{borderColor:h&&!l[t]?"#b4553f":"var(--color-border-hair)",background:"var(--paper)",color:"var(--ink-soft)"},role:"checkbox","aria-checked":!!l[t],onClick:()=>u(e=>{let o=[...e];return o[t]=!o[t],o}),children:[(0,n.jsx)(Box,{checked:!!l[t]}),(0,n.jsx)("span",{children:e})]},e))}),
-h&&!allTicked&&(0,n.jsx)("p",{className:"mt-3 text-[0.85rem]",style:{color:"#b4553f"},children:"Please confirm each of the criteria above to continue."}),
+let pick=(k,q,opts)=>{let s=h2&&!!herrs[k];return(0,n.jsxs)("fieldset",{className:"flex flex-col gap-2",children:[(0,n.jsx)("legend",{className:"text-[0.95rem] font-medium mb-2",style:{color:"var(--ink-soft)"},children:q}),
+(0,n.jsx)("div",{className:"flex flex-wrap gap-2",role:"radiogroup",children:opts.map(v=>(0,n.jsx)("button",{type:"button",role:"radio","aria-checked":hx[k]===v,"data-q":k,onClick:()=>setH(k,v),className:"rounded-full px-4 py-2 text-[0.95rem] border transition-all duration-300",style:hx[k]===v?{borderColor:"var(--gold)",background:"color-mix(in oklab, var(--gold) 14%, var(--paper))",color:"var(--ink)"}:{borderColor:s?"#b4553f":"var(--color-border-hair)",background:"var(--paper)",color:"var(--ink-soft)"},children:v},v))}),
+s&&errText(herrs[k])]})};
+let text=(k,q,ph="",rows=0,hint="")=>{let s=h2&&!!herrs[k];return(0,n.jsxs)("label",{className:"flex flex-col gap-1.5",children:[(0,n.jsx)("span",{className:"text-[0.95rem] font-medium",style:{color:"var(--ink-soft)"},children:q}),
+rows?(0,n.jsx)("textarea",{name:k,rows:rows,value:hx[k],placeholder:ph,"aria-invalid":s,onChange:t=>setH(k,t.target.value),className:"rounded-xl px-4 py-3 text-[1.02rem] resize-none",style:inputStyle(s)}):(0,n.jsx)("input",{type:"text",name:k,value:hx[k],placeholder:ph,onChange:t=>setH(k,t.target.value),className:"rounded-xl px-4 py-3 text-[1.02rem]",style:inputStyle(!1)}),
+hint&&!s&&(0,n.jsx)("span",{className:"text-[0.8rem]",style:{color:"var(--color-ink-subtle)"},children:hint}),s&&errText(herrs[k])]})};
+let today=new Date().toISOString().slice(0,10),sub=e=>(0,n.jsx)("h3",{className:"font-display mt-10 text-ink",style:{fontSize:"1.2rem"},children:e}),
+head=(h1,stepNo)=>[(0,n.jsx)("div",{className:"text-center",children:(0,n.jsx)("span",{className:"eyebrow",children:label})},"e"),
+(0,n.jsx)("h1",{className:"display-md mt-3 text-ink text-center mx-auto",style:{maxWidth:"26ch"},children:h1},"h"),
+(0,n.jsx)("p",{className:"mt-2 text-center text-[0.85rem]",style:{color:"var(--color-ink-subtle)"},children:`Step ${stepNo} of 2`},"s")];
+if(2===st)return(0,n.jsx)("div",{style:{paddingTop:"7rem",paddingBottom:"4rem"},children:(0,n.jsx)("div",{className:"container-narrow w-full",children:(0,n.jsxs)("form",{onSubmit:submit,noValidate:!0,className:"mx-auto",style:{maxWidth:"40rem"},children:[
+...head("Your medical history",2),
+(0,n.jsx)("p",{className:"mt-5 text-[1.02rem] leading-relaxed text-center mx-auto",style:{color:"var(--color-ink-muted)",maxWidth:"34rem"},children:"These questions help your doctor prepare for your consultation. Your doctor reviews every answer and makes all decisions with you."}),
+(0,n.jsxs)("div",{className:"flex flex-col gap-8 mt-10",children:[
+text("concern","What would you like to talk to the doctor about?","A few words is fine",3),
+pick("duration","How long has this been going on?",DURATIONS),
+(0,n.jsxs)("div",{className:"flex flex-col gap-3",children:[pick("seenBefore","Have you seen a doctor or tried any treatment for this before?",YNU),text("seenBeforeDetails","Details (optional)","For example, who you saw or what you tried")]}),
+pick("pregnancy","Are you currently pregnant, breastfeeding or planning a pregnancy?",YN),
+pick("psychosisHistory","Have you or a close family member ever been diagnosed with psychosis, schizophrenia or bipolar disorder?",YNU),
+text("allergies","Do you have any allergies?","e.g. None, or list them"),
+text("medicines","What medicines or supplements do you currently take?","e.g. None, or list them"),
+text("conditions","Do you have any ongoing medical conditions?","e.g. None, or list them"),
+pick("smokeOrVape","Do you smoke or vape?",YN)]}),
+h2&&!valid2&&(0,n.jsx)("p",{className:"mt-6 text-[0.85rem] text-center",style:{color:"#b4553f"},children:"Please answer the questions marked above."}),
+(0,n.jsxs)("div",{className:"flex flex-wrap items-center justify-center gap-3 mt-10",children:[(0,n.jsx)("button",{type:"button",className:"btn btn-ghost btn-lg",onClick:()=>{setSt(1),toTop()},disabled:p,children:"Back"}),
+(0,n.jsx)("button",{type:"submit",className:"btn btn-gold btn-lg",disabled:p,style:{opacity:p?.6:1},children:p?"One moment…":"Continue"})]})]})})});
+return(0,n.jsx)("div",{style:{paddingTop:"7rem",paddingBottom:"4rem"},children:(0,n.jsx)("div",{className:"container-narrow w-full",children:(0,n.jsxs)("form",{onSubmit:next,noValidate:!0,className:"mx-auto",style:{maxWidth:"40rem"},children:[
+...head("Book a consultation",1),
+(0,n.jsx)("div",{className:"grid gap-3 mt-8",children:step1.map((e,t)=>(0,n.jsxs)("button",{type:"button",className:"w-full text-left rounded-2xl px-5 py-4 text-[1rem] transition-all duration-300 border flex items-start gap-3",style:l[t]?{borderColor:"var(--gold)",background:"color-mix(in oklab, var(--gold) 12%, var(--paper))",color:"var(--ink)"}:{borderColor:h&&!l[t]?"#b4553f":"var(--color-border-hair)",background:"var(--paper)",color:"var(--ink-soft)"},role:"checkbox","aria-checked":!!l[t],onClick:()=>u(e=>{let o=[...e];return o[t]=!o[t],o}),children:[(0,n.jsx)(Box,{checked:!!l[t]}),(0,n.jsx)("span",{children:e})]},e))}),
+h&&!allTicked&&(0,n.jsx)("p",{className:"mt-3 text-[0.85rem]",style:{color:"#b4553f"},children:"Please confirm both statements above to continue."}),
 (0,n.jsx)("h2",{className:"font-display mt-12 text-ink text-center",style:{fontSize:"1.6rem"},children:"A few details about you"}),
 (0,n.jsxs)("div",{className:"grid gap-4 sm:grid-cols-2 mt-6",children:[field("firstName","First name","text","","given-name"),field("lastName","Last name","text","","family-name")]}),
 (0,n.jsxs)("div",{className:"grid gap-4 mt-4",children:[field("dob","Date of birth","date","","bday",{max:today}),field("email","Email address","email","you@example.com","email"),field("mobile","Mobile number","tel","04xx xxx xxx","tel")]}),
@@ -57,8 +101,9 @@ sub("Home address"),
 sub("Medicare"),(0,n.jsx)("p",{className:"mt-2 text-[0.9rem] leading-relaxed",style:{color:"var(--color-ink-muted)"},children:"We need your Medicare details to verify your identity. Please have your card handy."}),
 (0,n.jsxs)("div",{className:"grid gap-4 mt-4",style:{gridTemplateColumns:"minmax(0,2fr) minmax(0,1fr)"},children:[field("medicare","Medicare card number","text","xxxx xxxxx x","off",{inputMode:"numeric",maxLength:20,hint:"The 10 digits on the front of your card"}),sel("medicareIrn","Your number on the card",["1","2","3","4","5","6","7","8","9"],"Select")]}),
 (0,n.jsx)("p",{className:"mt-2 text-[0.8rem]",style:{color:"var(--color-ink-subtle)"},children:"If more than one person is on the card, choose the number printed next to your name."}),
-(0,n.jsxs)("p",{className:"mt-6 text-[0.85rem] leading-relaxed text-center",style:{color:"var(--color-ink-muted)"},children:["By ticking the boxes above, I confirm that I meet the stated criteria and that the information provided is true and accurate to the best of my knowledge. We will use these details to contact you about your care, in line with our ",(0,n.jsx)(r(),{href:"/legal/privacy/",className:"underline",children:"Privacy Policy"}),"."]}),
-(0,n.jsx)("div",{className:"text-center",children:(0,n.jsx)("button",{type:"submit",className:"btn btn-gold btn-lg mt-8",disabled:p,style:{opacity:p?.6:1},children:p?"One moment…":"Continue to booking"})})]})})})}
+(0,n.jsxs)("p",{className:"mt-6 text-[0.85rem] leading-relaxed text-center",style:{color:"var(--color-ink-muted)"},children:["By continuing, you confirm that the information you provide is true and accurate to the best of your knowledge. We will use these details to contact you about your care, in line with our ",(0,n.jsx)(r(),{href:"/legal/privacy/",className:"underline",children:"Privacy Policy"}),"."]}),
+(0,n.jsx)("div",{className:"text-center",children:(0,n.jsx)("button",{type:"submit",className:"btn btn-gold btn-lg mt-8",children:"Continue"})}),
+(0,n.jsx)("p",{className:"mt-6 text-[0.85rem] leading-relaxed text-center mx-auto",style:{color:"var(--color-ink-muted)",maxWidth:"34rem"},children:FEE_TERMS})]})})})}
 },9449:(e,t,o)=>{"use strict";o.d(t,{N:()=>f});var n=o(5155),a=o(2115),i=o(9551),r=o(8819),s=o(5131),l=o(4866);class d extends a.Component{getSnapshotBeforeUpdate(e){let t=this.props.childRef.current;if(t&&e.isPresent&&!this.props.isPresent){let e=this.props.sizeRef.current;e.height=t.offsetHeight||0,e.width=t.offsetWidth||0,e.top=t.offsetTop,e.left=t.offsetLeft}return null}componentDidUpdate(){}render(){return this.props.children}}function c({children:e,isPresent:t}){let o=(0,a.useId)(),i=(0,a.useRef)(null),r=(0,a.useRef)({width:0,height:0,top:0,left:0}),{nonce:s}=(0,a.useContext)(l.Q);return(0,a.useInsertionEffect)(()=>{let{width:e,height:n,top:a,left:l}=r.current;if(t||!i.current||!e||!n)return;i.current.dataset.motionPopId=o;let d=document.createElement("style");return s&&(d.nonce=s),document.head.appendChild(d),d.sheet&&d.sheet.insertRule(`
           [data-motion-pop-id="${o}"] {
             position: absolute !important;
