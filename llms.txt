@@ -1,19 +1,20 @@
 # Dr Buttons Integrative Health
 
-> Dr Buttons Integrative Health is an Australian telehealth clinic. It connects people with an AHPRA-registered doctor for an online consultation about ongoing pain, sleep and stress, or about quitting smoking or vaping. Tagline: Where Science Meets Wellness.
+> Dr Buttons Integrative Health is an Australian telehealth clinic. It offers phone consultations with registered Australian doctors, and doctor-led support to quit smoking or vaping. Tagline: Where Science Meets Wellness.
 
-## What we treat
-- [Pain, sleep and stress](https://drbuttons.com.au/treatments/natural-alternative-medicine/): An online consultation with a registered Australian doctor.
-- [Quit smoking and vaping](https://drbuttons.com.au/treatments/quit-smoking-vaping/): Talk to a doctor about a plan to stop.
+## Services
+- [Doctor consultation](https://drbuttons.com.au/services/doctor-consultation/): Talk to a registered doctor, from home. Your doctor reviews your history and talks through your options with you by phone.
+- [Quit smoking support](https://drbuttons.com.au/services/quit-smoking-support/): A doctor works with you on a quit plan that fits your goals, with follow-ups to help you stay on track.
 
 ## Key facts
 - Phone consultations available Australia-wide.
 - Every consultation is with an AHPRA-registered doctor.
 - A few short questions help book the right appointment and brief the doctor. They are not a diagnosis and do not decide treatment. A registered doctor decides everything in a real-time consultation.
-- The consultation fee is $0. Any treatment, if clinically appropriate, is discussed with the patient and charged separately.
+- The $0 fee covers your initial telehealth consultation. If your doctor recommends treatment, any costs are explained to you before you agree to anything.
 - Health information is stored securely, hosted in Australia, and handled under the Australian Privacy Principles.
 
 ## Pages
+- [Services](https://drbuttons.com.au/services/)
 - [How it works](https://drbuttons.com.au/how-it-works/)
 - [About](https://drbuttons.com.au/about/)
 - [FAQs](https://drbuttons.com.au/faqs/)
